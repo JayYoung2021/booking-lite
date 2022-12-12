@@ -1,6 +1,7 @@
 import os
 import logging
 
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -195,5 +196,8 @@ def test_read_users_nonexistent_phone_number():
     assert len(data) == 0
 
 
-def test_delete_db():
+@pytest.fixture(scope='session', autouse=True)
+def db_conn():
+    yield None
+    # Will be executed after the last test
     os.remove('test.db')
