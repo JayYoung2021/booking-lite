@@ -50,7 +50,7 @@ def read_users(
             return []
         users = [user_by_phone_number]
 
-    if phone_number is not None:
+    if identify_number is not None:
         user_by_identify_number = crud.get_user_by_identify_number(db, identify_number)
         if user_by_identify_number not in users:
             return []
