@@ -7,7 +7,7 @@ class EnhancedEnum(Enum):
         return value in (it.value for it in cls)
 
 
-class Type(EnhancedEnum):
+class RoomType(EnhancedEnum):
     SINGLE = "single"
     TWIN = "twin"
     FAMILY = "family"

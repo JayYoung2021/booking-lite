@@ -181,7 +181,7 @@ def test_read_users_nonexistent_phone_number():
         '/users/',
         json={
             'name': 'foo',
-            'phone_number': '133377041111',
+            'phone_number': '13337704111',
             'identify_number': '320102200108300811',
             'password': '123'
         }
@@ -189,7 +189,7 @@ def test_read_users_nonexistent_phone_number():
     assert response.status_code == 201, response.text
 
     response = client.get(
-        '/users/?phone_number=133377041000',
+        '/users/?phone_number=13337704000',
     )
     assert response.status_code == 200, response.text
     data = response.json()

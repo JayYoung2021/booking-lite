@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.post(
     "/",
-    response_model=schemas.User,
+    response_model=schemas.UserOut,
     status_code=status.HTTP_201_CREATED
 )
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -30,7 +30,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.get(
     "/",
-    response_model=List[schemas.User],
+    response_model=List[schemas.UserOut],
     status_code=status.HTTP_200_OK,
 )
 def read_users(
@@ -39,10 +39,7 @@ def read_users(
         identify_number: Optional[str] = None,
         db: Session = Depends(get_db),
 ):
-    if name is None:
-        users = crud.get_users(db)
-    else:
-        users = crud.get_users_by_name(db, name)
+    users = crud.get_users(db, name)
 
     if phone_number is not None:
         user_by_phone_number = crud.get_user_by_phone_number(db, phone_number)
@@ -58,23 +55,24 @@ def read_users(
     return users
 
 
-@router.delete(
+@router.get(
     "/{user_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=schemas.UserOut,
+    status_code=status.HTTP_200_OK,
 )
-def read_item(user_id: int, db: Session = Depends(get_db)):
+def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    crud.delete_user(db, db_user)
+    return db_user
 
 
 @router.patch(
     "/{user_id}",
-    response_model=schemas.User,
+    response_model=schemas.UserOut,
     status_code=status.HTTP_200_OK
 )
-def update_item(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
+def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -82,13 +80,12 @@ def update_item(user_id: int, user: schemas.UserUpdate, db: Session = Depends(ge
     return crud.update_user(db, user_id, user)
 
 
-@router.get(
+@router.delete(
     "/{user_id}",
-    response_model=schemas.User,
-    status_code=status.HTTP_200_OK,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
-def read_item(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+    crud.delete_user(db, db_user)

@@ -1,9 +1,10 @@
 from fastapi import FastAPI, HTTPException
 
-from routers import routers_user
+from routers import *
 
 app = FastAPI()
 app.include_router(routers_user.router)
+app.include_router(routers_room.router)
 
 
 @app.get("/")

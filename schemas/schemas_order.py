@@ -13,5 +13,3 @@ class OrderBase(BaseModel):
 
 class Order(OrderBase):
     pass
-
-

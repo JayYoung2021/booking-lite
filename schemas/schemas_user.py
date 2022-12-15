@@ -8,17 +8,11 @@ class UserBase(BaseModel):
     identify_number: str
 
 
-class UserUpdate(BaseModel):
-    name: Optional[str] = None
-    phone_number: Optional[str] = None
-    identify_number: Optional[str] = None
-
-
 class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
+class UserOut(UserBase):
     id: int
 
     # is_active: bool
@@ -26,3 +20,9 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    phone_number: Optional[str] = None
+    identify_number: Optional[str] = None
