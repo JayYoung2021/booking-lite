@@ -38,7 +38,9 @@ def get_users(db: Session, name: str):
 def update_user(db: Session, user_id: int, user: schemas.UserUpdate):
     db_user: models.User = get_user_by_id(db, user_id)
     update_data: dict = user.dict(exclude_unset=True)
-    db_user = db_user.copy(update=update_data)
+    # https://github.com/tiangolo/fastapi/discussions/2561
+    for key, value in update_data.items():
+        setattr(db_user, key, value)
     db.commit()
     db.refresh(db_user)
     return db_user
