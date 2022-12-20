@@ -169,4 +169,4 @@ cython_debug/
 #.idea/
 
 # SQLite file
-*.db
+sql_app.db

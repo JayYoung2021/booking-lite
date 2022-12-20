@@ -21,9 +21,9 @@ router = APIRouter(
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # XXX whether to separate them from each other?
     is_user_exist: bool = (crud.get_user_by_phone_number(db, user.phone_number) is not None) or \
-                          (crud.get_user_by_identify_number(db, user.identify_number) is not None)
+                          (crud.get_user_by_identity_number(db, user.identity_number) is not None)
     if is_user_exist:
-        raise HTTPException(status_code=409, detail="Phone number or identify number already registered")
+        raise HTTPException(status_code=409, detail="Phone number or identity number already registered")
 
     return crud.create_user(db, user)
 
@@ -36,7 +36,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def read_users(
         name: Optional[str] = None,
         phone_number: Optional[str] = None,
-        identify_number: Optional[str] = None,
+        identity_number: Optional[str] = None,
         db: Session = Depends(get_db),
 ):
     users = crud.get_users(db, name)
@@ -47,9 +47,9 @@ def read_users(
             return []
         users = [user_by_phone_number]
 
-    if identify_number is not None:
-        user_by_identify_number = crud.get_user_by_identify_number(db, identify_number)
-        if user_by_identify_number not in users:
+    if identity_number is not None:
+        user_by_identity_number = crud.get_user_by_identity_number(db, identity_number)
+        if user_by_identity_number not in users:
             return []
 
     return users

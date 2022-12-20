@@ -9,7 +9,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
         name=user.name,
         phone_number=user.phone_number,
-        identify_number=user.identify_number,
+        identity_number=user.identity_number,
         hashed_password=fake_hashed_password
     )
     db.add(db_user)
@@ -26,12 +26,12 @@ def get_user_by_phone_number(db: Session, phone_number: str):
     return db.query(models.User).filter(models.User.phone_number == phone_number).first()
 
 
-def get_user_by_identify_number(db: Session, identify_number: str):
-    return db.query(models.User).filter(models.User.identify_number == identify_number).first()
+def get_user_by_identity_number(db: Session, identity_number: str):
+    return db.query(models.User).filter(models.User.identity_number == identity_number).first()
 
 
 def get_users(db: Session, name: str):
-    criterion = () if name is None else (models.User.name == name)
+    criterion: tuple = () if name is None else (models.User.name == name,)  # never delete the comma
     return db.query(models.User).filter(*criterion).all()
 
 

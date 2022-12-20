@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 import models
 import schemas
-from enum_utils import RoomType, RoomStatus
+from enums import RoomType, RoomStatus
 
 
 def create_room(db: Session, room: schemas.RoomCreate):

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 import crud
 import schemas
 from dependencies import get_db
-from enum_utils import RoomType, RoomStatus
+from enums import RoomType, RoomStatus
 
 router = APIRouter(
     prefix="/rooms",

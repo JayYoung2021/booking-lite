@@ -1,11 +1,16 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import (
+    BaseModel,
+    constr
+)
+
+from regexs import PHONE_NUMBER_REGEX, IDENTITY_NUMBER_REGEX
 
 
 class UserBase(BaseModel):
     name: str
-    phone_number: str
-    identify_number: str
+    phone_number: constr(strip_whitespace=True, regex=PHONE_NUMBER_REGEX)
+    identity_number: constr(strip_whitespace=True, regex=IDENTITY_NUMBER_REGEX)
 
 
 class UserCreate(UserBase):
@@ -24,5 +29,5 @@ class UserOut(UserBase):
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
-    phone_number: Optional[str] = None
-    identify_number: Optional[str] = None
+    phone_number: Optional[constr(strip_whitespace=True, regex=PHONE_NUMBER_REGEX)] = None
+    identity_number: Optional[constr(strip_whitespace=True, regex=IDENTITY_NUMBER_REGEX)] = None

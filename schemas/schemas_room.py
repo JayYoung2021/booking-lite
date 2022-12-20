@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
-from enum_utils import RoomStatus
+from enums import RoomStatus
 
 
 class RoomBase(BaseModel):
