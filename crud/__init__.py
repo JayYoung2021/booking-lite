@@ -7,5 +7,12 @@ from .crud_user import (
     update_user,
     delete_user
 )
-# from .crud_room import *
+from .crud_room import (
+    create_room,
+    get_room_by_id,
+    get_room_by_room_number,
+    get_rooms,
+    update_room,
+    delete_room
+)
 # from .crud_order import *

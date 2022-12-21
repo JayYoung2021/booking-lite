@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -12,7 +13,6 @@ def create_room(db: Session, room: schemas.RoomCreate):
         room_number=room.room_number,
         type_=room.type_,
         price=room.price,
-        room_status=RoomStatus.VACANT
     )
     db.add(db_room)
     db.commit()
@@ -31,8 +31,8 @@ def get_room_by_room_number(db: Session, room_number: str):
 def get_rooms(
         db: Session,
         type_: Optional[RoomType] = None,
-        price_min: Optional[float] = None,
-        price_max: Optional[float] = None,
+        price_min: Optional[Decimal] = None,
+        price_max: Optional[Decimal] = None,
         status: Optional[RoomStatus] = None,
 ):
     criterion: list = []
@@ -50,7 +50,8 @@ def get_rooms(
 def update_room(db: Session, room_id: int, room: schemas.RoomUpdate):
     db_room = get_room_by_id(db, room_id)
     update_data: dict = room.dict(exclude_unset=True)
-    db_room = db_room.copy(update=update_data)
+    for key, value in update_data.items():
+        setattr(db_room, key, value)
     db.commit()
     db.refresh(db_room)
     return db_room

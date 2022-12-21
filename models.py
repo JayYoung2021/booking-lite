@@ -1,10 +1,10 @@
+from decimal import Decimal
+
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Enum
 from sqlalchemy.orm import relationship
-from pydantic import constr
 
 from database import Base
 from enums import RoomType, RoomStatus, PaymentStatus
-from regexs import PHONE_NUMBER_REGEX, IDENTITY_NUMBER_REGEX
 
 
 class User(Base):
@@ -17,14 +17,15 @@ class User(Base):
     hashed_password = Column(String)
     # is_active = Column(Boolean, default=True)
 
-# class Room(Base):
-#     __tablename__ = "rooms"
-#
-#     id = Column(Integer, primary_key=True)
-#     room_number = Column(String, primary_key=True)
-#     type_ = Column(Enum(RoomType), index=True)
-#     price = Column(Float, index=True)
-#     room_status = Column(Enum(RoomStatus), index=True, default=RoomStatus.VACANT)
+
+class Room(Base):
+    __tablename__ = "rooms"
+
+    id = Column(Integer, primary_key=True)
+    room_number = Column(String, unique=True, index=True)
+    type_ = Column(Enum(RoomType), index=True)
+    price = Column(Decimal, index=True)
+    room_status = Column(Enum(RoomStatus), index=True, default=RoomStatus.VACANT)
 
 
 # class Order(Base):
