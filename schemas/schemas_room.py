@@ -1,12 +1,15 @@
+from decimal import Decimal
 from typing import Optional
-from pydantic import BaseModel
-from enums import RoomStatus
+from pydantic import BaseModel, constr, condecimal
+
+from regexs import ROOM_NUMBER_REGEX
+from enums import RoomType, RoomStatus
 
 
 class RoomBase(BaseModel):
-    room_number: str
-    type_: str
-    price: float
+    room_number: constr(strip_whitespace=True, regex=ROOM_NUMBER_REGEX)
+    type_: RoomType
+    price: condecimal(ge=Decimal(0.00), max_digits=2)
 
 
 class RoomCreate(RoomBase):
@@ -22,7 +25,7 @@ class RoomOut(RoomBase):
 
 
 class RoomUpdate(BaseModel):
-    type_: Optional[str] = None
-    price_min: Optional[float] = None
-    price_max: Optional[float] = None
-    room_status: Optional[str] = None
+    type_: Optional[RoomType] = None
+    price_min: Optional[condecimal(ge=Decimal(0.00), max_digits=2)] = None
+    price_max: Optional[condecimal(ge=Decimal(0.00), max_digits=2)] = None
+    room_status: Optional[RoomStatus] = None

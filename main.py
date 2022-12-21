@@ -2,12 +2,12 @@ from fastapi import FastAPI, HTTPException
 
 import models
 from database import engine
-from routers import routers_user
+from routers import user_router
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.include_router(routers_user.router)
+app.include_router(user_router)
 
 
 @app.get("/")
