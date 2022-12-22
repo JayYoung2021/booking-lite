@@ -1,10 +1,7 @@
-from decimal import Decimal
-
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Float, Enum
 
 from database import Base
-from enums import RoomType, RoomStatus, PaymentStatus
+from enums import RoomType, RoomStatus
 
 
 class User(Base):

@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException
 
 import models
 from database import engine
-from enums import RoomType
 from routers import user_router, room_router
 
 models.Base.metadata.create_all(bind=engine)
