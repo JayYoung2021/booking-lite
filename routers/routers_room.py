@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status as fastapi_status
+from fastapi import APIRouter, Depends, HTTPException, status as http_status
 from sqlalchemy.orm import Session
 
 import crud
@@ -17,7 +17,7 @@ router = APIRouter(
 @router.post(
     "/",
     response_model=schemas.RoomOut,
-    status_code=fastapi_status.HTTP_201_CREATED
+    status_code=http_status.HTTP_201_CREATED
 )
 def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
     is_room_exist: bool = crud.get_room_by_room_number(db, room.room_number) is not None
@@ -29,26 +29,30 @@ def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
 @router.get(
     '/',
     response_model=List[schemas.RoomOut],
-    status_code=fastapi_status.HTTP_200_OK,
+    status_code=http_status.HTTP_200_OK,
 )
 def read_rooms(
         room_number: Optional[str] = None,
         type_: Optional[RoomType] = None,
         price_min: Optional[float] = None,
         price_max: Optional[float] = None,
-        room_status: Optional[RoomStatus] = None,
+        status: Optional[RoomStatus] = None,
         db: Session = Depends(get_db)
 ):
-    if room_number is not None:
-        return [crud.get_room_by_room_number(db, room_number)]
-
-    return crud.get_rooms(db, type_, price_min, price_max, room_status)
+    rooms = crud.get_rooms(db, type_, price_min, price_max, status)
+    if room_number is None:
+        return rooms
+    room_by_room_number = crud.get_room_by_room_number(db, room_number)
+    if room_by_room_number in rooms:
+        return [room_by_room_number]
+    else:
+        return []
 
 
 @router.get(
     '/{room_id}',
     response_model=schemas.RoomOut,
-    status_code=fastapi_status.HTTP_200_OK,
+    status_code=http_status.HTTP_200_OK,
 )
 def read_room(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
@@ -60,7 +64,7 @@ def read_room(room_id: int, db: Session = Depends(get_db)):
 @router.patch(
     '/{room_id}',
     response_model=schemas.RoomOut,
-    status_code=fastapi_status.HTTP_200_OK,
+    status_code=http_status.HTTP_200_OK,
 )
 def update_room(room_id: int, room: schemas.RoomUpdate, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
@@ -71,10 +75,10 @@ def update_room(room_id: int, room: schemas.RoomUpdate, db: Session = Depends(ge
 
 @router.delete(
     '/{room_id}',
-    status_code=fastapi_status.HTTP_204_NO_CONTENT,
+    status_code=http_status.HTTP_204_NO_CONTENT,
 )
 def delete_room(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
         raise HTTPException(status_code=404, detail="Room not found")
-    crud.delete_user(db, db_room)
+    crud.delete_room(db, room_id)

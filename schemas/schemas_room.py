@@ -9,7 +9,7 @@ from enums import RoomType, RoomStatus
 class RoomBase(BaseModel):
     room_number: constr(strip_whitespace=True, regex=ROOM_NUMBER_REGEX)
     type_: RoomType
-    price: condecimal(ge=Decimal(0.00), max_digits=2)
+    price: condecimal(ge=Decimal(0.00), decimal_places=2)
 
 
 class RoomCreate(RoomBase):
@@ -21,11 +21,11 @@ class RoomOut(RoomBase):
     room_status: RoomStatus
 
     class Config:
-        org_mode = True
+        orm_mode = True
 
 
 class RoomUpdate(BaseModel):
+    room_number: Optional[constr(strip_whitespace=True, regex=ROOM_NUMBER_REGEX)] = None
     type_: Optional[RoomType] = None
-    price_min: Optional[condecimal(ge=Decimal(0.00), max_digits=2)] = None
-    price_max: Optional[condecimal(ge=Decimal(0.00), max_digits=2)] = None
+    price: Optional[condecimal(ge=Decimal(0.00), decimal_places=2)] = None
     room_status: Optional[RoomStatus] = None

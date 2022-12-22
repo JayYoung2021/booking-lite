@@ -33,7 +33,7 @@ def get_rooms(
         type_: Optional[RoomType] = None,
         price_min: Optional[Decimal] = None,
         price_max: Optional[Decimal] = None,
-        status: Optional[RoomStatus] = None,
+        room_status: Optional[RoomStatus] = None,
 ):
     criterion: list = []
     if type_ is not None:
@@ -42,8 +42,8 @@ def get_rooms(
         criterion.append(models.Room.price >= price_min)
     if price_max is not None:
         criterion.append(models.Room.price <= price_max)
-    if status is not None:
-        criterion.append(models.Room.status == status)
+    if room_status is not None:
+        criterion.append(models.Room.room_status == room_status)
     return db.query(models.Room).filter(*criterion).all()
 
 

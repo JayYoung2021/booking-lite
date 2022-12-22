@@ -24,7 +24,7 @@ class Room(Base):
     id = Column(Integer, primary_key=True)
     room_number = Column(String, unique=True, index=True)
     type_ = Column(Enum(RoomType), index=True)
-    price = Column(Decimal, index=True)
+    price = Column(Float, index=True)
     room_status = Column(Enum(RoomStatus), index=True, default=RoomStatus.VACANT)
 
 

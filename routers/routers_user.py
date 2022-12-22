@@ -8,13 +8,13 @@ import schemas
 from dependencies import get_db
 
 router = APIRouter(
-    prefix="/users",
+    prefix='/users',
     tags=["users"],
 )
 
 
 @router.post(
-    "/",
+    '/',
     response_model=schemas.UserOut,
     status_code=status.HTTP_201_CREATED
 )
@@ -24,12 +24,11 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
                           (crud.get_user_by_identity_number(db, user.identity_number) is not None)
     if is_user_exist:
         raise HTTPException(status_code=409, detail="Phone number or identity number already registered")
-
     return crud.create_user(db, user)
 
 
 @router.get(
-    "/",
+    '/',
     response_model=List[schemas.UserOut],
     status_code=status.HTTP_200_OK,
 )
@@ -56,7 +55,7 @@ def read_users(
 
 
 @router.get(
-    "/{user_id}",
+    '/{user_id}',
     response_model=schemas.UserOut,
     status_code=status.HTTP_200_OK,
 )
@@ -68,7 +67,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.patch(
-    "/{user_id}",
+    '/{user_id}',
     response_model=schemas.UserOut,
     status_code=status.HTTP_200_OK
 )
@@ -81,7 +80,7 @@ def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(ge
 
 
 @router.delete(
-    "/{user_id}",
+    '/{user_id}',
     status_code=status.HTTP_204_NO_CONTENT,
 )
 def delete_user(user_id: int, db: Session = Depends(get_db)):
