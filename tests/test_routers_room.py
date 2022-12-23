@@ -189,6 +189,19 @@ def test_delete_room():
     )
     assert response.status_code == 204, response.text
 
+    response = client.get(
+        f'/rooms/{id_}'
+    )
+    assert response.status_code == 404, response.text
+
+
+    response = client.get(
+        '/rooms/?room_number=178'
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert len(data) == 0
+
 
 @pytest.fixture(scope='session', autouse=True)
 def db_conn():
