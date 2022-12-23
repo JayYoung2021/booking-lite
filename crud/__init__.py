@@ -15,4 +15,10 @@ from .crud_room import (
     update_room,
     delete_room
 )
-# from .crud_order import *
+from .crud_order import (
+    create_order,
+    get_order_by_id,
+    get_orders,
+    update_order,
+    delete_order
+)

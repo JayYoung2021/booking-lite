@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, Enum
+from sqlalchemy import Column, Integer, String, Float, Enum, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 
 from database import Base
-from enums import RoomType, RoomStatus
+from enums import RoomType, RoomStatus, PaymentStatus
 
 
 class User(Base):
@@ -25,18 +26,18 @@ class Room(Base):
     room_status = Column(Enum(RoomStatus), index=True, default=RoomStatus.VACANT)
 
 
-# class Order(Base):
-#     __tablename__ = "orders"
-#
-#     id = Column(Integer, primary_key=True)
-#     user_id = Column(Integer, ForeignKey("users.id"))
-#     user = relationship("User", backref="users")
-#     room_id = Column(Integer, ForeignKey("rooms.id"))
-#     room = relationship("Room", backref="rooms")
-#     # check_in_time = Column()
-#     stay_length = Column(Integer)
-#     expense = Column(Float)
-#     payment_status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID)
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", backref="users")
+    room_id = Column(Integer, ForeignKey("rooms.id"))
+    room = relationship("Room", backref="rooms")
+    check_in_time = Column(DateTime)
+    stay_length = Column(Integer)
+    expense = Column(Float)
+    payment_status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID)
 
 
 # class Admin(Base):

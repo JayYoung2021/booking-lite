@@ -1,15 +1,25 @@
-from typing import List, Union
+import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, conint
+
+from enums import PaymentStatus
 
 
 class OrderBase(BaseModel):
-    user_id: int
-    room_id: int
-    # check_in_time
-    stay_length: int
-    expense: float
+    user_id: conint(ge=1)
+    room_id: conint(ge=1)
+    check_in_time: datetime.datetime
+    stay_length: conint(ge=1)
 
 
-class Order(OrderBase):
+class OrderCreate(OrderBase):
     pass
+
+
+class OrderOut(OrderBase):
+    id: int
+    expense: float
+    payment_status: PaymentStatus
+
+    class Config:
+        orm_mode = True

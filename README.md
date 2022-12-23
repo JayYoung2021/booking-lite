@@ -36,15 +36,15 @@
 
 #### 订单表
 
-| 名称         | 类型     | 备注             |
-|------------|--------|----------------|
-| ID         | number |                |
-| 用户 ID      | number |                |
-| 房间 ID（房间号） | number |                |
-| 入住日期       | string | yyyyMMddHHmmss |
-| 入住天数（天）    | number |                |
-| 支付费用       | number |                |
-| 支付状态       | string | （未付款、已付款）TODO  |
+| 名称      | 类型     | 备注             |
+|---------|--------|----------------|
+| ID      | number |                |
+| 用户 ID   | number |                |
+| 房间 ID   | number |                |
+| 入住日期    | string | yyyyMMddHHmmss |
+| 入住天数（天） | number |                |
+| 支付费用    | number |                |
+| 支付状态    | string | （未付款、已付款）TODO  |
 
 #### 管理员表
 
