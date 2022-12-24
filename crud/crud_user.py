@@ -19,6 +19,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def get_user_by_id(db: Session, user_id: int):
+
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
@@ -50,3 +51,8 @@ def delete_user(db: Session, user_id: int):
     db_user = get_user_by_id(db, user_id)
     db.delete(db_user)
     db.commit()
+
+
+def get_user_orders(db: Session, user_id: int):
+    db_user = get_user_by_id(db, user_id)
+    return db_user.orders

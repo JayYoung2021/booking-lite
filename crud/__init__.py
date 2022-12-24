@@ -5,7 +5,8 @@ from .crud_user import (
     get_user_by_identity_number,
     get_users,
     update_user,
-    delete_user
+    delete_user,
+    get_user_orders,
 )
 from .crud_room import (
     create_room,
@@ -13,7 +14,8 @@ from .crud_room import (
     get_room_by_room_number,
     get_rooms,
     update_room,
-    delete_room
+    delete_room,
+    get_room_orders,
 )
 from .crud_order import (
     create_order,

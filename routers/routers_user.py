@@ -88,3 +88,15 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     crud.delete_user(db, user_id)
+
+
+@router.get(
+    '/{user_id}/orders',
+    status_code=status.HTTP_200_OK,
+)
+def read_user_orders(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_id(db, user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return crud.get_user_orders(db, user_id)

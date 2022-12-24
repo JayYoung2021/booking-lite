@@ -12,7 +12,7 @@ def create_room(db: Session, room: schemas.RoomCreate):
     db_room = models.Room(
         room_number=room.room_number,
         type_=room.type_,
-        price=room.price,
+        price=float(room.price),
     )
     db.add(db_room)
     db.commit()
@@ -61,3 +61,8 @@ def delete_room(db: Session, room_id: int):
     db_room = get_room_by_id(db, room_id)
     db.delete(db_room)
     db.commit()
+
+
+def get_room_orders(db: Session, order_id: int):
+    db_room = get_room_by_id(db, order_id)
+    return db_room.orders

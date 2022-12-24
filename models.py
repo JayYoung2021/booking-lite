@@ -6,7 +6,7 @@ from enums import RoomType, RoomStatus, PaymentStatus
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user_table"
 
     id = Column(Integer, primary_key=True)
     name = Column(String, index=True)
@@ -14,26 +14,29 @@ class User(Base):
     identity_number = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     # is_active = Column(Boolean, default=True)
+    orders = relationship('Order', back_populates='user')
 
 
 class Room(Base):
-    __tablename__ = "rooms"
+    __tablename__ = "room_table"
 
     id = Column(Integer, primary_key=True)
     room_number = Column(String, unique=True, index=True)
     type_ = Column(Enum(RoomType), index=True)
     price = Column(Float, index=True)
     room_status = Column(Enum(RoomStatus), index=True, default=RoomStatus.VACANT)
+    orders = relationship('Order', back_populates='room')
+
 
 
 class Order(Base):
-    __tablename__ = "orders"
+    __tablename__ = "order_table"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", backref="users")
-    room_id = Column(Integer, ForeignKey("rooms.id"))
-    room = relationship("Room", backref="rooms")
+    user_id = Column(Integer, ForeignKey("user_table.id"))
+    user = relationship("User", back_populates="orders")
+    room_id = Column(Integer, ForeignKey("room_table.id"))
+    room = relationship("Room", back_populates="orders")
     check_in_time = Column(DateTime)
     stay_length = Column(Integer)
     expense = Column(Float)

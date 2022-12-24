@@ -82,3 +82,15 @@ def delete_room(room_id: int, db: Session = Depends(get_db)):
     if db_room is None:
         raise HTTPException(status_code=404, detail="Room not found")
     crud.delete_room(db, room_id)
+
+
+@router.get(
+    '/{room_id}/orders',
+    status_code=http_status.HTTP_200_OK,
+)
+def read_room_orders(room_id: int, db: Session = Depends(get_db)):
+    db_room = crud.get_room_by_id(db, room_id)
+    if db_room is None:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    return crud.get_room_orders(db, room_id)
