@@ -1,4 +1,5 @@
 from typing import Optional
+
 from pydantic import BaseModel, constr
 
 from regexs import PHONE_NUMBER_REGEX, IDENTITY_NUMBER_REGEX

@@ -41,9 +41,10 @@ class Order(Base):
     expense = Column(Float)
     payment_status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID)
 
-# class Admin(Base):
-#     __tablename__ = "admins"
-#
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String, index=True)
-#     hashed_password = Column(String)
+
+class Admin(Base):
+    __tablename__ = "admins"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, index=True)
+    hashed_password = Column(String)
