@@ -1,10 +1,11 @@
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, constr, condecimal
 
 from enums import RoomType, RoomStatus
 from regexs import ROOM_NUMBER_REGEX
+from .schemas_order import OrderOut
 
 
 class RoomBase(BaseModel):
@@ -20,6 +21,7 @@ class RoomCreate(RoomBase):
 class RoomOut(RoomBase):
     id: int
     room_status: RoomStatus
+    orders: List[OrderOut]
 
     class Config:
         orm_mode = True

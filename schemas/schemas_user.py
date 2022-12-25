@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, constr
 
 from regexs import PHONE_NUMBER_REGEX, IDENTITY_NUMBER_REGEX
+from .schemas_order import OrderOut
 
 
 class UserBase(BaseModel):
@@ -17,8 +18,7 @@ class UserCreate(UserBase):
 
 class UserOut(UserBase):
     id: int
-
-    # orders: List[Order] = []
+    orders: List[OrderOut]
 
     class Config:
         orm_mode = True
@@ -28,3 +28,8 @@ class UserUpdate(BaseModel):
     name: Optional[constr(strip_whitespace=True)] = None
     phone_number: Optional[constr(strip_whitespace=True, regex=PHONE_NUMBER_REGEX)] = None
     identity_number: Optional[constr(strip_whitespace=True, regex=IDENTITY_NUMBER_REGEX)] = None
+
+
+class UserPassword(BaseModel):
+    old_password: constr(strip_whitespace=True)
+    new_password: constr(strip_whitespace=True)
