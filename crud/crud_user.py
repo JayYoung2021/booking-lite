@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from sqlalchemy.orm import Session
 
@@ -61,3 +61,12 @@ def delete_user(db: Session, user_id: int) -> None:
 def get_user_orders(db: Session, user_id: int) -> Optional[List[models.Order]]:
     db_user = get_user_by_id(db, user_id)
     return db_user.orders
+
+
+def authenticate_user(db: Session, phone_number: str, password: str) -> Union[models.User, bool]:
+    user: models.User = get_user_by_phone_number(db, phone_number)
+    if user is None:
+        return False
+    if not security.verify_password(password, user.hashed_password):
+        return False
+    return user

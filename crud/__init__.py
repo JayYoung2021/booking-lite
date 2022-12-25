@@ -7,6 +7,7 @@ from .crud_user import (
     update_user,
     delete_user,
     get_user_orders,
+    authenticate_user,
 )
 from .crud_room import (
     create_room,

@@ -15,3 +15,8 @@ from .schemas_order import (
 from .schemas_token import (
     Token,
 )
+from .schemas_admin import (
+    AdminCreate,
+    AdminOut,
+    AdminUpdate
+)

@@ -18,7 +18,6 @@ class UserCreate(UserBase):
 class UserOut(UserBase):
     id: int
 
-    # is_active: bool
     # orders: List[Order] = []
 
     class Config:
