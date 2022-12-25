@@ -91,7 +91,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
-    '/{user_id}/orders',
+    '/{user_id: int}/orders',
     status_code=status.HTTP_200_OK,
 )
 def read_user_orders(user_id: int, db: Session = Depends(get_db)):

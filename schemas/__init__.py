@@ -12,3 +12,6 @@ from .schemas_order import (
     OrderCreate,
     OrderOut
 )
+from .schemas_token import (
+    Token,
+)

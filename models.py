@@ -28,7 +28,6 @@ class Room(Base):
     orders = relationship('Order', back_populates='room')
 
 
-
 class Order(Base):
     __tablename__ = "order_table"
 
@@ -41,7 +40,6 @@ class Order(Base):
     stay_length = Column(Integer)
     expense = Column(Float)
     payment_status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID)
-
 
 # class Admin(Base):
 #     __tablename__ = "admins"

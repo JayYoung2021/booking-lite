@@ -194,7 +194,6 @@ def test_delete_room():
     )
     assert response.status_code == 404, response.text
 
-
     response = client.get(
         '/rooms/?room_number=178'
     )
