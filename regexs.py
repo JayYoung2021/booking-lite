@@ -5,3 +5,5 @@ IDENTITY_NUMBER_REGEX = r'^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12
                         r'0-9Xx]$'
 
 ROOM_NUMBER_REGEX = r'^[1-9]\d{2,3}$'
+
+JOB_NUMBER_REGEX = r'\d+'

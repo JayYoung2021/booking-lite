@@ -23,7 +23,8 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     is_user_exist: bool = (crud.get_user_by_phone_number(db, user.phone_number) is not None) or \
                           (crud.get_user_by_identity_number(db, user.identity_number) is not None)
     if is_user_exist:
-        raise HTTPException(status_code=409, detail="Phone number or identity number already registered")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail="Phone number or identity number already registered")
     return crud.create_user(db, user)
 
 
@@ -62,7 +63,7 @@ def read_users(
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return db_user
 
 
@@ -74,7 +75,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return crud.update_user(db, user_id, user)
 
@@ -86,7 +87,7 @@ def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(ge
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     crud.delete_user(db, user_id)
 
 
@@ -97,6 +98,6 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 def read_user_orders(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return crud.get_user_orders(db, user_id)

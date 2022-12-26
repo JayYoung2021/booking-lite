@@ -2,9 +2,11 @@ from typing import Optional
 
 from pydantic import BaseModel, constr
 
+from regexs import JOB_NUMBER_REGEX
+
 
 class AdminBase(BaseModel):
-    job_number: int
+    job_number: constr(strip_whitespace=True, regex=JOB_NUMBER_REGEX)
     name: constr(strip_whitespace=True)
 
 

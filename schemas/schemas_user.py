@@ -28,8 +28,3 @@ class UserUpdate(BaseModel):
     name: Optional[constr(strip_whitespace=True)] = None
     phone_number: Optional[constr(strip_whitespace=True, regex=PHONE_NUMBER_REGEX)] = None
     identity_number: Optional[constr(strip_whitespace=True, regex=IDENTITY_NUMBER_REGEX)] = None
-
-
-class UserPassword(BaseModel):
-    old_password: constr(strip_whitespace=True)
-    new_password: constr(strip_whitespace=True)

@@ -24,7 +24,7 @@ router = APIRouter(
 def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
     user_id, room_id = order.user_id, order.room_id
     if get_user_by_id(db, user_id) is None or get_room_by_id(db, room_id) is None:
-        raise HTTPException(status_code=404, detail="User or room not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User or room not found")
     return crud.create_order(db, order)
 
 
@@ -52,7 +52,7 @@ def read_orders(
 def read_order(order_id: int, db: Session = Depends(get_db)):
     db_order = crud.get_order_by_id(db, order_id)
     if db_order is None:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
     return db_order
 
 
@@ -64,7 +64,7 @@ def read_order(order_id: int, db: Session = Depends(get_db)):
 def update_order(order_id: int, payment_status: enums.PaymentStatus, db: Session = Depends(get_db)):
     db_order = crud.get_order_by_id(db, order_id)
     if db_order is None:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
     return crud.update_order(db, order_id, payment_status)
 
 
@@ -75,5 +75,5 @@ def update_order(order_id: int, payment_status: enums.PaymentStatus, db: Session
 def delete_order(order_id: int, db: Session = Depends(get_db)):
     db_order = crud.get_order_by_id(db, order_id)
     if db_order is None:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
     crud.delete_order(db, order_id)
