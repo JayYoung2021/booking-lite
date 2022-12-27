@@ -22,5 +22,10 @@ class AdminOut(AdminBase):
 
 
 class AdminUpdate(BaseModel):
-    name: Optional[constr(strip_whitespace=True)]
-    password: Optional[constr(strip_whitespace=True)]
+    password: constr(strip_whitespace=True)
+    name: Optional[constr(strip_whitespace=True)] = None
+    new_password: Optional[constr(strip_whitespace=True)] = None
+
+
+class AdminDelete(BaseModel):
+    password: constr(strip_whitespace=True)

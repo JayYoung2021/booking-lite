@@ -5,12 +5,13 @@ from sqlalchemy.orm import Session
 
 import crud
 import schemas
-from dependencies import get_db
+from dependencies import get_db, get_current_admin
 from enums import RoomType, RoomStatus
 
 router = APIRouter(
     prefix="/rooms",
     tags=["rooms"],
+    dependencies=[Depends(get_current_admin)]
 )
 
 

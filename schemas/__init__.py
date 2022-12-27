@@ -1,7 +1,8 @@
 from .schemas_admin import (
     AdminCreate,
     AdminOut,
-    AdminUpdate
+    AdminUpdate,
+    AdminDelete
 )
 from .schemas_order import (
     OrderCreate,
@@ -18,9 +19,5 @@ from .schemas_token import (
 from .schemas_user import (
     UserCreate,
     UserOut,
-    UserUpdate
-)
-from .schemas_user_me import (
-    UserUpdateWithPassword,
-    UserDeleteWithPassword
+    UserUpdate,
 )

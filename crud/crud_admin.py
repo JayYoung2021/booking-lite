@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -7,62 +7,52 @@ import schemas
 import security
 
 
-def create_admin(db: Session, user: schemas.UserCreate) -> models.User:
-    fake_hashed_password = security.get_password_hash(user.password)
-    print(user.password)
-    print(fake_hashed_password)
-    print(security.verify_password(user.password, fake_hashed_password))
-    db_user = models.User(
-        name=user.name,
-        phone_number=user.phone_number,
-        identity_number=user.identity_number,
-        hashed_password=fake_hashed_password
+def create_admin(db: Session, admin: schemas.AdminCreate) -> models.Admin:
+    hashed_password = security.get_password_hash(admin.password)
+    db_admin = models.Admin(
+        job_number=admin.job_number,
+        name=admin.name,
+        hashed_password=hashed_password
     )
-    db.add(db_user)
+    db.add(db_admin)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_admin)
+    return db_admin
 
 
-def get_admin_by_id(db: Session, user_id: int) -> Optional[models.User]:
-    return db.query(models.User).filter(models.User.id == user_id).first()
+def get_admin_by_id(db: Session, admin_id: int) -> Optional[models.Admin]:
+    return db.query(models.Admin).filter(models.Admin.id == admin_id).first()
 
 
-def get_user_by_phone_number(db: Session, phone_number: str) -> Optional[models.User]:
-    return db.query(models.User).filter(models.User.phone_number == phone_number).first()
+def get_admin_by_job_number(db: Session, job_number: str) -> Optional[models.Admin]:
+    return db.query(models.Admin).filter(models.Admin.job_number == job_number).first()
 
 
-def get_users(db: Session, name: str) -> Optional[List[models.User]]:
-    criterion: tuple = () if name is None else (models.User.name == name,)  # never delete the comma
-    return db.query(models.User).filter(*criterion).all()
-
-
-def update_user(db: Session, user_id: int, user: schemas.UserUpdate) -> models.User:
-    db_user: models.User = get_user_by_id(db, user_id)
-    update_data: dict = user.dict(exclude_unset=True)
-    # https://github.com/tiangolo/fastapi/discussions/2561
-    for key, value in update_data.items():
-        setattr(db_user, key, value)
+def update_admin(
+        db: Session,
+        admin_id: int,
+        admin: schemas.AdminUpdate
+) -> models.Admin:
+    db_admin: models.Admin = get_admin_by_id(db, admin_id)
+    if admin.name is not None:
+        db_admin.name = admin.name
+    if admin.new_password is not None:
+        db_admin.hashed_password = security.get_password_hash(admin.new_password)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_admin)
+    return db_admin
 
 
-def delete_user(db: Session, user_id: int) -> None:
-    db_user = get_user_by_id(db, user_id)
-    db.delete(db_user)
+def delete_admin(db: Session, admin_id: int) -> None:
+    db_admin = get_admin_by_id(db, admin_id)
+    db.delete(db_admin)
     db.commit()
 
 
-def get_user_orders(db: Session, user_id: int) -> Optional[List[models.Order]]:
-    db_user = get_user_by_id(db, user_id)
-    return db_user.orders
+def is_admin_exist_by_job_number(db: Session, job_number: str) -> bool:
+    return get_admin_by_job_number(db, job_number) is not None
 
 
-def is_user_exist_by_phone_number(db: Session, phone_number: str) -> bool:
-    return get_user_by_phone_number(db, phone_number) is not None
-
-
-def authenticate_user(db: Session, phone_number: str, password: str) -> bool:
-    user: models.User = get_user_by_phone_number(db, phone_number)
-    return security.verify_password(password, user.hashed_password)
+def authenticate_admin(db: Session, job_number: str, password: str) -> bool:
+    admin: models.Admin = get_admin_by_job_number(db, job_number)
+    return security.verify_password(password, admin.hashed_password)

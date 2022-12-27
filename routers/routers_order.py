@@ -8,11 +8,12 @@ import crud
 import enums
 import schemas
 from crud import get_user_by_id, get_room_by_id
-from dependencies import get_db
+from dependencies import get_db, get_current_admin
 
 router = APIRouter(
     prefix="/orders",
     tags=["orders"],
+    dependencies=[Depends(get_current_admin)]
 )
 
 

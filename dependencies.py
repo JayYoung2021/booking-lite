@@ -4,8 +4,8 @@ from fastapi import Depends, HTTPException, status
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
+import crud
 import schemas
-from crud import get_user_by_phone_number
 from database import SessionLocal
 from security import oauth2_scheme, SECRET_KEY, ALGORITHM
 
@@ -18,7 +18,7 @@ def get_db():
         db.close()
 
 
-def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> schemas.UserCreate:
+def get_current_admin(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> schemas.AdminCreate:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -26,16 +26,15 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        phone_number: str = payload.get('sub')
-        if phone_number is None:
+        job_number: str = payload.get('sub')
+        if job_number is None:
             raise credentials_exception
-        # token_data = schemas.TokenData(phone_number=phone_number)
         expire_time: datetime.datetime = datetime.datetime.fromtimestamp(payload.get('exp'))
         if datetime.datetime.utcnow() > expire_time:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user_by_phone_number(db, phone_number)
-    if user is None:
+    admin = crud.get_admin_by_job_number(db, job_number)
+    if admin is None:
         raise credentials_exception
-    return user
+    return admin

@@ -5,11 +5,12 @@ from sqlalchemy.orm import Session
 
 import crud
 import schemas
-from dependencies import get_db
+from dependencies import get_db, get_current_admin
 
 router = APIRouter(
     prefix='/users',
-    tags=["users"],
+    tags=['users'],
+    dependencies=[Depends(get_current_admin)]
 )
 
 
@@ -23,8 +24,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     is_user_exist: bool = (crud.get_user_by_phone_number(db, user.phone_number) is not None) or \
                           (crud.get_user_by_identity_number(db, user.identity_number) is not None)
     if is_user_exist:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                            detail="Phone number or identity number already registered")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Phone number or identity number already registered"
+        )
     return crud.create_user(db, user)
 
 

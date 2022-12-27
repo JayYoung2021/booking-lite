@@ -1,3 +1,12 @@
+from .crud_admin import (
+    create_admin,
+    get_admin_by_id,
+    get_admin_by_job_number,
+    update_admin,
+    delete_admin,
+    is_admin_exist_by_job_number,
+    authenticate_admin
+)
 from .crud_order import (
     create_order,
     get_order_by_id,
@@ -23,6 +32,4 @@ from .crud_user import (
     update_user,
     delete_user,
     get_user_orders,
-    is_user_exist_by_phone_number,
-    authenticate_user,
 )
