@@ -1,4 +1,5 @@
-from typing import List, Optional
+from functools import wraps
+from typing import List, Optional, Callable, Union
 
 from fastapi import APIRouter, Depends, HTTPException, status as http_status
 from sqlalchemy.orm import Session
@@ -14,6 +15,36 @@ router = APIRouter(
     tags=["rooms"],
     dependencies=[Depends(get_current_admin)]
 )
+
+
+def process_read_data(
+        func: Callable[
+            [Union[models.Room, List[models.Room]]],
+            Union[schemas.RoomOut, List[schemas.RoomOut]]
+        ]  # 输入为 sqlalchemy 对象，输出为 pydantic 对象
+):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        db_data = func(*args, **kwargs)
+
+        def sort_orders(obj: schemas.RoomOut) -> schemas.RoomOut:  # 将与房间绑定的订单按照入住时间排序
+            obj.orders.sort(key=lambda order: order.check_in_time)
+            return obj
+
+        if not isinstance(db_data, list):  # 如果数据是单个对象
+            room: schemas.RoomOut = schemas.RoomOut.from_orm(db_data)
+            return sort_orders(room)  # 此处添加函数
+
+        # 如果数据是数组
+        rooms = list(map(  # 遍历
+            lambda db_room: sort_orders(  # 此处添加函数
+                schemas.RoomOut.from_orm(db_room)
+            ),
+            db_data
+        ))
+        return rooms
+
+    return wrapper
 
 
 @router.post(
@@ -36,6 +67,7 @@ def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
     response_model=List[schemas.RoomOut],
     status_code=http_status.HTTP_200_OK,
 )
+@process_read_data
 def read_rooms(
         room_number: Optional[str] = None,
         type_: Optional[RoomType] = None,
@@ -44,18 +76,12 @@ def read_rooms(
         status: Optional[RoomStatus] = None,
         db: Session = Depends(get_db)
 ):
-    def sort_orders(rooms: List[models.Room]) -> List[schemas.RoomOut]:
-        return list(map(
-            lambda db_room: schemas.RoomOut.from_orm(db_room).sort_orders(),
-            rooms
-        ))
-
     db_rooms = crud.get_rooms(db, type_, price_min, price_max, status)
     if room_number is None:
-        return sort_orders(db_rooms)
+        return db_rooms
     db_room_by_room_number = crud.get_room_by_room_number(db, room_number)
     if db_room_by_room_number in db_rooms:
-        return sort_orders([db_room_by_room_number])
+        return [db_room_by_room_number]
     else:
         return []
 
@@ -65,13 +91,12 @@ def read_rooms(
     response_model=schemas.RoomOut,
     status_code=http_status.HTTP_200_OK,
 )
+@process_read_data
 def read_room(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
         raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Room not found")
-
-    response_rooms = schemas.RoomOut.from_orm(db_room)
-    return response_rooms.sort_orders()
+    return db_room
 
 
 @router.patch(
