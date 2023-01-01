@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status as http_status
 from sqlalchemy.orm import Session
 
 import crud
+import models
 import schemas
 from dependencies import get_db, get_current_admin
 from enums import RoomType, RoomStatus
@@ -23,7 +24,10 @@ router = APIRouter(
 def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
     is_room_exist: bool = crud.get_room_by_room_number(db, room.room_number) is not None
     if is_room_exist:
-        raise HTTPException(status_code=http_status.HTTP_409_CONFLICT, detail="Room number already registered")
+        raise HTTPException(
+            status_code=http_status.HTTP_409_CONFLICT,
+            detail="Room number already registered"
+        )
     return crud.create_room(db, room)
 
 
@@ -40,12 +44,18 @@ def read_rooms(
         status: Optional[RoomStatus] = None,
         db: Session = Depends(get_db)
 ):
-    rooms = crud.get_rooms(db, type_, price_min, price_max, status)
+    def sort_orders(rooms: List[models.Room]) -> List[schemas.RoomOut]:
+        return list(map(
+            lambda db_room: schemas.RoomOut.from_orm(db_room).sort_orders(),
+            rooms
+        ))
+
+    db_rooms = crud.get_rooms(db, type_, price_min, price_max, status)
     if room_number is None:
-        return rooms
-    room_by_room_number = crud.get_room_by_room_number(db, room_number)
-    if room_by_room_number in rooms:
-        return [room_by_room_number]
+        return sort_orders(db_rooms)
+    db_room_by_room_number = crud.get_room_by_room_number(db, room_number)
+    if db_room_by_room_number in db_rooms:
+        return sort_orders([db_room_by_room_number])
     else:
         return []
 
@@ -59,7 +69,9 @@ def read_room(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
         raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Room not found")
-    return db_room
+
+    response_rooms = schemas.RoomOut.from_orm(db_room)
+    return response_rooms.sort_orders()
 
 
 @router.patch(
