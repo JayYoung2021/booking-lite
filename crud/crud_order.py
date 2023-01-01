@@ -38,7 +38,6 @@ def get_orders(
         payment_status: Optional[str] = None
 ):
     criterion: list = []
-    # orders_query = db.query(models.Order)
     if user_id is not None:
         criterion.append(models.Order.user_id == user_id)
     if room_id is not None:

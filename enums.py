@@ -1,25 +1,19 @@
 from enum import Enum
 
 
-class EnhancedEnum(Enum):
-    @classmethod
-    def has_value(cls, value):
-        return value in (it.value for it in cls)
-
-
-class RoomType(EnhancedEnum):
+class RoomType(Enum):
     SINGLE = "single"
     TWIN = "twin"
     FAMILY = "family"
 
 
-class RoomStatus(EnhancedEnum):
+class RoomStatus(Enum):
     VACANT = "vacant"
     OCCUPIED = "occupied"
     DIRTY = "dirty"
     RESERVED = "reserved"
 
 
-class PaymentStatus(EnhancedEnum):
+class PaymentStatus(Enum):
     UNPAID = "unpaid"
     PAID = "paid"

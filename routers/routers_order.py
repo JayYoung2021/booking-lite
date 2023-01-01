@@ -23,8 +23,7 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED
 )
 def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
-    user_id, room_id = order.user_id, order.room_id
-    if get_user_by_id(db, user_id) is None or get_room_by_id(db, room_id) is None:
+    if get_user_by_id(db, order.user_id) is None or get_room_by_id(db, order.room_id) is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User or room not found")
     return crud.create_order(db, order)
 

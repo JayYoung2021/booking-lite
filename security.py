@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from passlib.context import CryptContext
 
+# https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "4496cd2dc8c79984e95473422a8029e2b6fc64e3db9b8a49f16c93b70f358a14"
@@ -20,8 +21,6 @@ def verify_password(plain_password, hashed_password) -> bool:
 
 
 def get_password_hash(password):
-    print(password)
-    print(pwd_context.hash(password))
     return pwd_context.hash(password)
 
 

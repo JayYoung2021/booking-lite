@@ -13,7 +13,6 @@ class User(Base):
     phone_number = Column(String, unique=True, index=True)
     identity_number = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    # is_active = Column(Boolean, default=True)
     orders = relationship('Order', back_populates='user')
 
 
