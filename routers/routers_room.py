@@ -36,12 +36,11 @@ def process_read_data(
             return sort_orders(room)  # 此处添加函数
 
         # 如果数据是数组
-        rooms = list(map(  # 遍历
-            lambda db_room: sort_orders(  # 此处添加函数
+        rooms = [
+            sort_orders(  # 此处添加函数
                 schemas.RoomOut.from_orm(db_room)
-            ),
-            db_data
-        ))
+            ) for db_room in db_data
+        ]
         return rooms
 
     return wrapper

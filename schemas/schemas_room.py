@@ -26,11 +26,6 @@ class RoomOut(RoomBase):
     class Config:
         orm_mode = True
 
-    def sort_orders(self):
-        output_room = self.copy()
-        output_room.orders.sort(key=lambda order: order.check_in_time)
-        return output_room
-
 
 class RoomUpdate(BaseModel):
     room_number: Optional[constr(strip_whitespace=True, regex=ROOM_NUMBER_REGEX)] = None
