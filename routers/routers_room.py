@@ -94,7 +94,10 @@ def read_rooms(
 def read_room(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
-        raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Room not found")
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="Room not found"
+        )
     return db_room
 
 
@@ -106,7 +109,10 @@ def read_room(room_id: int, db: Session = Depends(get_db)):
 def update_room(room_id: int, room: schemas.RoomUpdate, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
-        raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Room not found")
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="Room not found"
+        )
     return crud.update_room(db, room_id, room)
 
 
@@ -117,7 +123,10 @@ def update_room(room_id: int, room: schemas.RoomUpdate, db: Session = Depends(ge
 def delete_room(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
-        raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Room not found")
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="Room not found"
+        )
     crud.delete_room(db, room_id)
 
 
@@ -128,6 +137,9 @@ def delete_room(room_id: int, db: Session = Depends(get_db)):
 def read_room_orders(room_id: int, db: Session = Depends(get_db)):
     db_room = crud.get_room_by_id(db, room_id)
     if db_room is None:
-        raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Room not found")
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="Room not found"
+        )
 
     return crud.get_room_orders(db, room_id)

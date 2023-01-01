@@ -94,7 +94,7 @@ npm run serve
 ### 数据安全
 
 - 密码使用哈希函数 bcrypt 加密，用于防止数据库泄露
-- 后端登录时使用 JWT，前端使用 SameSite cookies 中的 Lax，用于防止 CSRF 攻击
+- 后端登录使用 JWT，前端使用 SameSite cookies 中的 Lax，用于防止 CSRF 攻击
 - 对数据库的操作使用 ORM 框架，用于防止 SQL 注入
 - 后端默认使用 Python 的 `html.escape` 函数解析网页，用于防止 XSS 攻击
 
